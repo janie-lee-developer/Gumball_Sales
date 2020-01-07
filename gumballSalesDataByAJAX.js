@@ -1,12 +1,16 @@
 //note: AJAX, XMLHttpRequest constructor only works if the data is stored in same server as the website.
 
+var lastReportTime = 0;
+
 window.onload = function() {
   setInterval(handleRefresh, 3000);
     //the setInterval method will call the 'handleRefresh' function in every 3 seconds.
 }
 
 function handleRefresh() {
-  var url = "http://gumball.wickedlysmart.com?callback=updateSales";
+  var url = "http://gumball.wickedlysmart.com?callback=updateSales" +
+            "&lastreporttime=" + lastReportTime +
+            "&random=" + (new Date()).getTime();
   
   var newScriptElement = document.createElement("script");
     //creating a new element <script> at DOM.
@@ -44,4 +48,8 @@ function updateSales(sales) {
       salesDiv.appendChild(div);
          //placement of the 'div' element will be a child of 'salesDiv' element (the div element w ID="sales").
    }
+  if (sales.length > 0) {
+    lastReportTime = sales[sales.length-1].time;
+      //the last object in JSON's time.
+  }
 }
